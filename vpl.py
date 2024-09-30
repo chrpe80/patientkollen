@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets, QtCore
+import pandas as pd
 from blank_page import BlankPage
 from table import create_table, refill_table_with_data
 from all_headers import *
@@ -58,11 +59,12 @@ class VPLAddPage(BlankPage):
         note = QtWidgets.QTextEdit()
 
         button = QtWidgets.QPushButton("Spara")
-        button.clicked.connect(lambda: self.button_clicked((personal_nr.text(), fname.text(), lname.text(),
-                                                            attending.currentText(), in_tes.currentText(),
-                                                            date.date().toString(QtCore.Qt.ISODate),
-                                                            time.time().toString("HH:mm"), place.text(),
-                                                            note.toPlainText())))
+        button.clicked.connect(
+            lambda: self.button_clicked([personal_nr.text(), fname.text().title().strip(), lname.text().title().strip(),
+                                         attending.currentText(), in_tes.currentText(),
+                                         date.date().toString(QtCore.Qt.ISODate),
+                                         time.time().toString("HH:mm"), place.text().capitalize().strip(),
+                                         note.toPlainText().capitalize().strip()]))
 
         widgets = (
             personal_nr_label,
@@ -102,11 +104,11 @@ class VPLAddPage(BlankPage):
         attending.addItems(attending_values)
 
     @QtCore.Slot()
-    def button_clicked(self, values: tuple):
+    def button_clicked(self, values: list):
         result = self.validate_format_personal_nr(values[0])
         match result:
             case True:
-                self.save_row_to_file(self.path, values)
+                self.save_row_to_file(self.path, self.columns, values)
                 self.reset_form()
             case False:
                 pass
@@ -151,7 +153,7 @@ class VPLDeletePage(BlankPage):
 
     @QtCore.Slot()
     def button_clicked(self, index):
-        df = self.load_data(self.path, vpl_header)
+        df = self.load_data(self.path, self.columns)
         df = df.drop(index)
         self.save_dataframe_to_file(df)
         self.update_page()
@@ -162,6 +164,45 @@ class VPLUpdatePage(BlankPage):
     def __init__(self, path="vpl.csv", layout=QtWidgets.QVBoxLayout(), columns=vpl_header):
         super().__init__(path, layout, columns)
         self.add_widgets()
+
+    @staticmethod
+    def validate_date_input(date_string):
+        try:
+            pd.to_datetime(date_string, format="%Y-%m-%d", errors='raise')
+            return True
+        except ValueError:
+            return False
+
+    @staticmethod
+    def validate_time_input(time_string):
+        try:
+            pd.to_datetime(time_string, format="%H:%M", errors='raise')
+            return True
+        except ValueError:
+            return False
+
+    def format_string(self, column: str, string_to_format: str):
+        match column:
+            case "Personnummer":
+                return string_to_format
+
+            case "Datum":
+                result = self.validate_date_input(string_to_format)
+                if result:
+                    return string_to_format
+                return "2000-01-01"
+
+            case "Tid":
+                result = self.validate_time_input(string_to_format)
+                if result:
+                    return string_to_format
+                return "00:00"
+
+            case "Förnamn" | "Efternamn" | "Tar" | "Inlagd_TES":
+                return string_to_format.title().strip()
+
+            case "Plats" | "Anteckning":
+                return string_to_format.capitalize().strip()
 
     def add_widgets(self):
         container = QtWidgets.QGroupBox()
@@ -174,16 +215,15 @@ class VPLUpdatePage(BlankPage):
 
         column_label = QtWidgets.QLabel("Kolumn")
         column = QtWidgets.QComboBox()
-        column_values = vpl_header
-        column_values.insert(0, "")
-        column.addItems(column_values)
+        column.addItems(self.columns)
 
         text_field_label = QtWidgets.QLabel("Nytt värde")
         text_field = QtWidgets.QLineEdit()
 
         button = QtWidgets.QPushButton("Spara")
         button.clicked.connect(
-            lambda: self.button_clicked((name_of_person.currentIndex(), column.currentText(), text_field.text())))
+            lambda: self.button_clicked((name_of_person.currentIndex(), column.currentText(),
+                                         self.format_string(self.columns, text_field.text()))))
 
         widgets = (name_of_person_label, name_of_person, column_label, column, text_field_label, text_field)
 

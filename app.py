@@ -8,7 +8,6 @@ from samsa import Samsa
 from vpl import VPL
 from korttid import Korttid
 from overview import OverView
-from delete_diff import DeleteDiff
 from all_headers import *
 
 
@@ -40,22 +39,22 @@ class Window(QtWidgets.QMainWindow):
     @staticmethod
     def create_files():
         if not os.path.exists("staff.csv"):
-            with open("staff.csv", "w", encoding="latin1") as file1:
+            with open("staff.csv", "w", encoding="latin_1") as file1:
                 writer = csv.writer(file1, lineterminator="\n")
                 writer.writerow(staff_header)
 
         if not os.path.exists("short_term_facilities.csv"):
-            with open("short_term_facilities.csv", "w", encoding="latin1") as file2:
+            with open("short_term_facilities.csv", "w", encoding="latin_1") as file2:
                 writer = csv.writer(file2, lineterminator="\n")
                 writer.writerow(short_term_facilities_header)
 
         if not os.path.exists("samsa.csv"):
-            with open("samsa.csv", "w", encoding="latin1") as file3:
+            with open("samsa.csv", "w", encoding="latin_1") as file3:
                 writer = csv.writer(file3, lineterminator="\n")
                 writer.writerow(samsa_header)
 
         if not os.path.exists("vpl.csv"):
-            with open("vpl.csv", "w", encoding="latin1") as file4:
+            with open("vpl.csv", "w", encoding="latin_1") as file4:
                 writer = csv.writer(file4, lineterminator="\n")
                 writer.writerow(vpl_header)
 

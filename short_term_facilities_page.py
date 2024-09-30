@@ -10,7 +10,8 @@ def get_header():
 
 
 class ShortTermFacilitiesPage(BlankPage):
-    def __init__(self, path="short_term_facilities.csv", layout=QtWidgets.QVBoxLayout(), columns=short_term_facilities_header):
+    def __init__(self, path="short_term_facilities.csv", layout=QtWidgets.QVBoxLayout(),
+                 columns=short_term_facilities_header):
         super().__init__(path, layout, columns)
 
         self.add_widgets()
@@ -29,7 +30,7 @@ class ShortTermFacilitiesPage(BlankPage):
 
         save_short_term_facility_button = QtWidgets.QPushButton("Spara")
         save_short_term_facility_button.clicked.connect(
-            lambda: self.save_short_term_facility_button_clicked(name.text()))
+            lambda: self.save_short_term_facility_button_clicked(name.text().capitalize().strip()))
 
         delete_short_term_facility_label = QtWidgets.QLabel("Ta bort")
         short_term_facilities = QtWidgets.QComboBox()
@@ -75,7 +76,7 @@ class ShortTermFacilitiesPage(BlankPage):
 
     @QtCore.Slot()
     def save_short_term_facility_button_clicked(self, name):
-        self.save_row_to_file(self.path, (name,))
+        self.save_row_to_file(self.path, short_term_facilities_header, [name])
         self.update_page()
         self.reset_form()
 

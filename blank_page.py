@@ -1,6 +1,6 @@
 from PySide6 import QtWidgets, QtCore
 import pandas as pd
-import csv
+import numpy as np
 import re
 from abc import abstractmethod
 
@@ -37,12 +37,11 @@ class BlankPage(QtWidgets.QWidget):
     @staticmethod
     def load_data(path: str, columns: list):
         try:
-            df = pd.read_csv(path, encoding="latin-1").fillna("Ingen info")
+            df = pd.read_csv(path, encoding="latin_1")
         except pd.errors.EmptyDataError:
-            columns = columns
             empty_df = pd.DataFrame(columns=columns)
-            empty_df.to_csv(path, index=False)
-            df = pd.read_csv(path)
+            empty_df.to_csv(path, index=False, encoding="latin_1")
+            df = pd.read_csv(path, encoding="latin_1")
         return df
 
     @staticmethod
@@ -53,9 +52,6 @@ class BlankPage(QtWidgets.QWidget):
             return True
         else:
             return False
-
-    def save_dataframe_to_file(self, df):
-        df.to_csv(self.path, index=False, encoding="latin1")
 
     def reset_form(self) -> None:
         groupbox_layout = self.layout.itemAt(1).widget().layout()
@@ -75,16 +71,21 @@ class BlankPage(QtWidgets.QWidget):
             elif isinstance(groupbox_layout.itemAt(i).widget(), QtWidgets.QDateEdit):
                 groupbox_layout.itemAt(i).widget().setDate(QtCore.QDate.fromString("2000-01-01", "yyyy-MM-dd"))
 
-    @staticmethod
-    def save_row_to_file(path: str, variable: tuple):
-        with open(path, "a", encoding="latin1") as file:
-            writer = csv.writer(file, lineterminator="\n")
-            writer.writerow(variable)
+    def save_dataframe_to_file(self, df):
+        df = df.replace("", np.nan).fillna("Ingen info").drop_duplicates()
+        df.to_csv(self.path, index=False, encoding="latin_1")
+
+    def save_row_to_file(self, path: str, keys: list, values: list):
+        old_df = self.load_data(path, keys)
+        index = [old_df.shape[0]]
+        keys_values_zipped = zip(keys, values)
+        keys_values_dict = {k: v for k, v in keys_values_zipped}
+        new_row = pd.DataFrame(data=keys_values_dict, index=index)
+        new_entry = pd.concat([old_df, new_row])
+        self.save_dataframe_to_file(new_entry)
 
     @abstractmethod
     def add_widgets(self) -> None:
-        """Adds all widgets to the main page layout"""
-
         pass
 
     @abstractmethod

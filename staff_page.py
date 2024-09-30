@@ -32,16 +32,16 @@ class StaffPage(BlankPage):
 
         profession_label = QtWidgets.QLabel("Yrkestitel")
         profession = QtWidgets.QComboBox()
-        profession.addItems(["", "AT", "FT", "SSK"])
+        profession.addItems(["AT", "FT", "SSK"])
 
         save_staff_button = QtWidgets.QPushButton("Spara")
         save_staff_button.clicked.connect(
-            lambda: self.save_staff_button_clicked(fname.text(), lname.text(), profession.currentText()))
+            lambda: self.save_staff_button_clicked(fname.text().title().strip(), lname.text().title().strip(),
+                                                   profession.currentText()))
 
         staff_label = QtWidgets.QLabel("Personal")
         staff = QtWidgets.QComboBox()
         staff_values = [f"{item[1]}, {item[2]}" for item in self.df.itertuples()]
-        staff_values.insert(0, "")
         staff.addItems(staff_values)
 
         delete_staff_button = QtWidgets.QPushButton("Ta bort")
@@ -84,12 +84,11 @@ class StaffPage(BlankPage):
         staff = container.layout().itemAt(1).widget()
         staff.clear()
         staff_values = [f"{item[1]}, {item[2]}" for item in self.df.itertuples()]
-        staff_values.insert(0, "")
         staff.addItems(staff_values)
 
     @QtCore.Slot()
     def save_staff_button_clicked(self, fname, lname, profession):
-        self.save_row_to_file(self.path, (fname, lname, profession))
+        self.save_row_to_file(self.path, staff_header, [fname, lname, profession])
         self.update_page()
         self.reset_form()
 

@@ -64,10 +64,11 @@ class SamsaAddPage(BlankPage):
         note = QtWidgets.QTextEdit()
 
         button = QtWidgets.QPushButton("Spara")
-        button.clicked.connect(lambda: self.button_clicked((personal_nr.text(), fname.text(), lname.text(),
-                                                            ot.currentText(), pt.currentText(), enrolled.currentText(),
-                                                            tes_at.currentText(), tes_ft.currentText(),
-                                                            note.toPlainText())))
+        button.clicked.connect(lambda: self.button_clicked(
+            [personal_nr.text(), fname.text().title().strip(), lname.text().title().strip(),
+             ot.currentText(), pt.currentText(), enrolled.currentText(),
+             tes_at.currentText(), tes_ft.currentText(),
+             note.toPlainText().capitalize().strip()]))
 
         widgets = (
             personal_nr_label,
@@ -114,11 +115,11 @@ class SamsaAddPage(BlankPage):
         pt.addItems(pt_values)
 
     @QtCore.Slot()
-    def button_clicked(self, values: tuple):
+    def button_clicked(self, values: list):
         result = self.validate_format_personal_nr(values[0])
         match result:
             case True:
-                self.save_row_to_file(self.path, values)
+                self.save_row_to_file(self.path, samsa_header, values)
                 self.reset_form()
             case False:
                 pass
@@ -164,17 +165,30 @@ class SamsaDeletePage(BlankPage):
 
     @QtCore.Slot()
     def button_clicked(self, index):
-        df = self.load_data(self.path, samsa_header)
-        df = df.drop(index)
-        self.save_dataframe_to_file(df)
-        self.update_page()
-        self.reset_form()
+        if index >= 0:
+            df = self.load_data(self.path, samsa_header)
+            df = df.drop(index)
+            self.save_dataframe_to_file(df)
+            self.update_page()
+            self.reset_form()
+        else:
+            pass
 
 
 class SamsaUpdatePage(BlankPage):
     def __init__(self, path="samsa.csv", layout=QtWidgets.QVBoxLayout(), columns=samsa_header):
         super().__init__(path, layout, columns)
         self.add_widgets()
+
+    @staticmethod
+    def format_string(column: str, string_to_format: str):
+        match column:
+            case "Personnummer":
+                return string_to_format.strip()
+            case "Förnamn" | "Efternamn" | "AT" | "FT" | "Inskriven" | "Inlagd_TES_AT" | "Inlagd_TES_FT":
+                return string_to_format.title().strip()
+            case "Anteckning":
+                return string_to_format.capitalize().strip()
 
     def add_widgets(self):
         container = QtWidgets.QGroupBox()
@@ -188,16 +202,16 @@ class SamsaUpdatePage(BlankPage):
 
         column_label = QtWidgets.QLabel("Kolumn")
         column = QtWidgets.QComboBox()
-        column_values = samsa_header
-        column_values.insert(0, "")
-        column.addItems(column_values)
+        column.addItems(self.columns)
 
         text_field_label = QtWidgets.QLabel("Nytt värde")
         text_field = QtWidgets.QLineEdit()
 
         button = QtWidgets.QPushButton("Spara")
         button.clicked.connect(
-            lambda: self.button_clicked((name_of_person.currentIndex(), column.currentText(), text_field.text())))
+            lambda: self.button_clicked(
+                (name_of_person.currentIndex(), column.currentText(),
+                 self.format_string(column.currentText(), text_field.text()))))
 
         widgets = (name_of_person_label, name_of_person, column_label, column, text_field_label, text_field)
 
@@ -349,7 +363,7 @@ class DeleteDiff(QtWidgets.QWidget):
     @staticmethod
     def load_data(path: str, columns: list):
         try:
-            df = pd.read_csv(path, encoding="latin-1").fillna("Ingen info")
+            df = pd.read_csv(path, encoding="latin_1")
         except pd.errors.EmptyDataError:
             columns = columns
             empty_df = pd.DataFrame(columns=columns)
@@ -373,9 +387,17 @@ class DeleteDiff(QtWidgets.QWidget):
             diff = old.difference(new)
             old_df = self.load_data("samsa.csv", samsa_header)
             updated_df = old_df[~old_df["Personnummer"].isin(diff)]
-            updated_df.to_csv("samsa.csv", index=False, encoding="latin1")
+            updated_df.to_csv("samsa.csv", index=False, encoding="latin_1")
+            self.reset_form(diff, new.difference(old))
         else:
             pass
+
+    def reset_form(self, removed_patients, new_patients):
+        container = self.layout.itemAt(0).widget()
+        text_box = container.layout().itemAt(1).widget()
+        text_box.clear()
+        text_box.insertPlainText(
+            f"Nya patienter i SAMSA: {", ".join(new_patients)}\nUtskrivna: {", ".join(removed_patients)}")
 
 
 class Samsa(QtWidgets.QWidget):

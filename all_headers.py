@@ -1,5 +1,5 @@
 samsa_header = ["Personnummer", "Förnamn", "Efternamn", "AT", "FT", "Inskriven", "Inlagd_TES_AT", "Inlagd_TES_FT", "Anteckning"]
-vpl_header = ["Personnummer", "Förnamn", "Efternamn", "Tar", "Inlagd TES", "Datum", "Tid", "Plats", "Anteckning"]
+vpl_header = ["Personnummer", "Förnamn", "Efternamn", "Tar", "Inlagd_TES", "Datum", "Tid", "Plats", "Anteckning"]
 korttid_header = ["Personnummer", "Förnamn", "Efternamn", "AT", "FT", "Korttid", "Anteckning"]
 staff_header = ["Förnamn", "Efternamn", "Yrkestitel"]
 short_term_facilities_header = ["Namn på korttid"]

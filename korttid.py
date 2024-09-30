@@ -65,10 +65,11 @@ class KorttidAddPage(BlankPage):
         note = QtWidgets.QTextEdit()
 
         button = QtWidgets.QPushButton("Spara")
-        button.clicked.connect(lambda: self.button_clicked((personal_nr.text(), fname.text(), lname.text(),
-                                                            ot.currentText(), pt.currentText(),
-                                                            short_term_facility.currentText(),
-                                                            note.toPlainText())))
+        button.clicked.connect(
+            lambda: self.button_clicked((personal_nr.text(), fname.text().title().strip(), lname.text().title().strip(),
+                                         ot.currentText(), pt.currentText(),
+                                         short_term_facility.currentText(),
+                                         note.toPlainText().capitalize().strip())))
 
         widgets = (
             personal_nr_label,
@@ -123,7 +124,7 @@ class KorttidAddPage(BlankPage):
         result = self.validate_format_personal_nr(values[0])
         match result:
             case True:
-                self.save_row_to_file(self.path, values)
+                self.save_row_to_file(self.path, korttid_header, values)
                 self.reset_form()
             case False:
                 pass
@@ -179,6 +180,16 @@ class KorttidUpdatePage(BlankPage):
         super().__init__(path, layout, columns)
         self.add_widgets()
 
+    @staticmethod
+    def format_string(column: str, string_to_format: str):
+        match column:
+            case "Personnummer":
+                return string_to_format.strip()
+            case "Förnamn" | "Efternamn" | "AT" | "FT":
+                return string_to_format.title().strip()
+            case "Korttid" | "Anteckning":
+                return string_to_format.capitalize().strip()
+
     def add_widgets(self):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
@@ -190,16 +201,15 @@ class KorttidUpdatePage(BlankPage):
 
         column_label = QtWidgets.QLabel("Kolumn")
         column = QtWidgets.QComboBox()
-        column_values = korttid_header
-        column_values.insert(0, "")
-        column.addItems(column_values)
+        column.addItems(self.columns)
 
         text_field_label = QtWidgets.QLabel("Nytt värde")
         text_field = QtWidgets.QLineEdit()
 
         button = QtWidgets.QPushButton("Spara")
         button.clicked.connect(
-            lambda: self.button_clicked((name_of_person.currentIndex(), column.currentText(), text_field.text())))
+            lambda: self.button_clicked((name_of_person.currentIndex(), column.currentText(),
+                                         self.format_string(column.currentText(), text_field.text()))))
 
         widgets = (name_of_person_label, name_of_person, column_label, column, text_field_label, text_field)
 
