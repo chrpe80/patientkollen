@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore, QtGui
 import sys
 import csv
 import os
@@ -27,7 +27,7 @@ class Window(QtWidgets.QMainWindow):
         self.short_term_facilities_page_instance = ShortTermFacilitiesPage()
 
         self.setWindowTitle("Patientkoll")
-        self.setGeometry(0, 0, 1000, 600)
+        self.setGeometry(0, 0, 1200, 500)
 
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
@@ -35,6 +35,9 @@ class Window(QtWidgets.QMainWindow):
         self.menu_bar = self.menuBar()
         self.create_menu()
         self.init_ui()
+
+        self.palette = QtGui.QPalette()
+        self.add_palette()
 
     @staticmethod
     def create_files():
@@ -62,6 +65,9 @@ class Window(QtWidgets.QMainWindow):
             with open("korttid.csv", "w", encoding="latin1") as file5:
                 writer = csv.writer(file5, lineterminator="\n")
                 writer.writerow(korttid_header)
+
+    def add_palette(self):
+        self.setPalette(self.palette)
 
     def create_menu(self):
         pages_menu = self.menu_bar.addMenu('Sidor')

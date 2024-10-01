@@ -2,6 +2,7 @@ from PySide6 import QtWidgets, QtCore
 from all_headers import staff_header, short_term_facilities_header, korttid_header
 from table import create_table, refill_table_with_data
 from blank_page import BlankPage
+from settings import *
 
 
 class KorttidAddPage(BlankPage):
@@ -31,6 +32,7 @@ class KorttidAddPage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         personal_nr_label = QtWidgets.QLabel("Personnummer (ååmmdd-xxxx)")
         personal_nr = QtWidgets.QLineEdit()
@@ -92,8 +94,8 @@ class KorttidAddPage(BlankPage):
         for widget in widgets:
             container_layout.addWidget(widget)
 
-        self.layout.addWidget(QtWidgets.QLabel("Korttid - Lägg till patient"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("Korttid - Lägg till patient"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
 
     def update_page(self):
         self.df_staff = self.load_data("staff.csv", staff_header)
@@ -139,6 +141,7 @@ class KorttidDeletePage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         name_of_person_label = QtWidgets.QLabel("Namn")
         name_of_person = QtWidgets.QComboBox()
@@ -155,8 +158,8 @@ class KorttidDeletePage(BlankPage):
         container_layout.addWidget(QtWidgets.QLabel())
         container_layout.addWidget(button)
 
-        self.layout.addWidget(QtWidgets.QLabel("Korttid - Radera patient"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("Korttid - Radera patient"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
         self.layout.addStretch()
 
     def update_page(self):
@@ -194,6 +197,7 @@ class KorttidUpdatePage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         name_of_person_label = QtWidgets.QLabel("Namn")
         name_of_person = QtWidgets.QComboBox()
@@ -219,8 +223,8 @@ class KorttidUpdatePage(BlankPage):
         container_layout.addWidget(QtWidgets.QLabel())
         container_layout.addWidget(button)
 
-        self.layout.addWidget(QtWidgets.QLabel("Korttid - Uppdatera enskild cell"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("Korttid - Uppdatera enskild cell"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
         self.layout.addStretch()
 
     def update_page(self):

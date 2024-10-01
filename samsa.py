@@ -4,6 +4,7 @@ import re
 from blank_page import BlankPage
 from table import create_table, refill_table_with_data
 from all_headers import *
+from settings import *
 
 
 class SamsaAddPage(BlankPage):
@@ -24,6 +25,7 @@ class SamsaAddPage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         personal_nr_label = QtWidgets.QLabel("Personnummer (ååmmdd-xxxx)")
         personal_nr = QtWidgets.QLineEdit()
@@ -95,8 +97,8 @@ class SamsaAddPage(BlankPage):
         for widget in widgets:
             container_layout.addWidget(widget)
 
-        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Lägg till patient"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Lägg till patient"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
 
     def update_page(self):
         self.df_staff = self.load_data("staff.csv", staff_header)
@@ -134,6 +136,7 @@ class SamsaDeletePage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         name_of_person_label = QtWidgets.QLabel("Namn")
         name_of_person = QtWidgets.QComboBox()
@@ -151,8 +154,8 @@ class SamsaDeletePage(BlankPage):
         container_layout.addWidget(QtWidgets.QLabel())
         container_layout.addWidget(button)
 
-        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Radera patient"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Radera patient"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
         self.layout.addStretch()
 
     def update_page(self):
@@ -194,6 +197,7 @@ class SamsaUpdatePage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         name_of_person_label = QtWidgets.QLabel("Namn")
         name_of_person = QtWidgets.QComboBox()
@@ -221,8 +225,8 @@ class SamsaUpdatePage(BlankPage):
         container_layout.addWidget(QtWidgets.QLabel())
         container_layout.addWidget(button)
 
-        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Uppdatera enskild cell"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Uppdatera enskild cell"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
         self.layout.addStretch()
 
     def update_page(self):
@@ -300,7 +304,7 @@ class SamsaDisplayPage(BlankPage):
         container_layout.addWidget(table)
         container_layout.addLayout(button_container)
 
-        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Visa"))
+        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Visa"), alignment=QtCore.Qt.AlignCenter)
         self.layout.addWidget(container)
 
     def update_page(self):
@@ -348,17 +352,19 @@ class DeleteDiff(QtWidgets.QWidget):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         text_box = QtWidgets.QTextEdit()
         text_box.setToolTip("Kopiera alla personnummer från SAMSA och klistra in här separerade med kommatecken")
         button = QtWidgets.QPushButton("Skicka")
         button.clicked.connect(lambda: self.button_clicked(text_box.toPlainText()))
 
-        container.layout().addWidget(QtWidgets.QLabel("SAMSA - Ta bort utskrivna"))
         container_layout.addWidget(text_box)
         container_layout.addWidget(button)
 
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("SAMSA - Ta bort utskrivna"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
+        self.layout.addStretch()
 
     @staticmethod
     def load_data(path: str, columns: list):

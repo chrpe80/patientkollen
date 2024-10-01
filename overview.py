@@ -120,13 +120,13 @@ class OverView(QtWidgets.QWidget):
         korttid_button_layout.addWidget(korttid_sort_by_at)
         korttid_button_layout.addWidget(korttid_sort_by_ft)
 
-        samsa_layout.addWidget(QtWidgets.QLabel("SAMSA - Inskrivna"))
+        samsa_layout.addWidget(QtWidgets.QLabel("SAMSA - Inskrivna"), alignment=QtCore.Qt.AlignCenter)
         samsa_layout.addWidget(samsa_table)
         samsa_layout.addLayout(samsa_button_layout)
-        vpl_layout.addWidget(QtWidgets.QLabel("VPL"))
+        vpl_layout.addWidget(QtWidgets.QLabel("VPL"), alignment=QtCore.Qt.AlignCenter)
         vpl_layout.addWidget(vpl_table)
         vpl_layout.addLayout(vpl_button_layout)
-        korttid_layout.addWidget(QtWidgets.QLabel("KORTTID"))
+        korttid_layout.addWidget(QtWidgets.QLabel("KORTTID"), alignment=QtCore.Qt.AlignCenter)
         korttid_layout.addWidget(korttid_table)
         korttid_layout.addLayout(korttid_button_layout)
 

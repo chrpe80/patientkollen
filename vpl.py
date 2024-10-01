@@ -3,6 +3,7 @@ import pandas as pd
 from blank_page import BlankPage
 from table import create_table, refill_table_with_data
 from all_headers import *
+from settings import *
 
 
 class VPLAddPage(BlankPage):
@@ -23,6 +24,7 @@ class VPLAddPage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         personal_nr_label = QtWidgets.QLabel("Personnummer (ååmmdd-xxxx)")
         personal_nr = QtWidgets.QLineEdit()
@@ -91,8 +93,8 @@ class VPLAddPage(BlankPage):
         for widget in widgets:
             container_layout.addWidget(widget)
 
-        self.layout.addWidget(QtWidgets.QLabel("VPL - Lägg till patient"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("VPL - Lägg till patient"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
 
     def update_page(self):
         self.df_staff = self.load_data("staff.csv", staff_header)
@@ -123,6 +125,7 @@ class VPLDeletePage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         name_of_person_label = QtWidgets.QLabel("Namn")
         name_of_person = QtWidgets.QComboBox()
@@ -140,8 +143,8 @@ class VPLDeletePage(BlankPage):
         container_layout.addWidget(QtWidgets.QLabel())
         container_layout.addWidget(button)
 
-        self.layout.addWidget(QtWidgets.QLabel("VPL - Radera patient"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("VPL - Radera patient"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
         self.layout.addStretch()
 
     def update_page(self):
@@ -208,6 +211,7 @@ class VPLUpdatePage(BlankPage):
         container = QtWidgets.QGroupBox()
         container_layout = QtWidgets.QVBoxLayout()
         container.setLayout(container_layout)
+        container.setFixedWidth(fixed_width)
 
         name_of_person_label = QtWidgets.QLabel("Namn")
         name_of_person = QtWidgets.QComboBox()
@@ -233,8 +237,8 @@ class VPLUpdatePage(BlankPage):
         container_layout.addWidget(QtWidgets.QLabel())
         container_layout.addWidget(button)
 
-        self.layout.addWidget(QtWidgets.QLabel("VPL - Uppdatera enskild cell"))
-        self.layout.addWidget(container)
+        self.layout.addWidget(QtWidgets.QLabel("VPL - Uppdatera enskild cell"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
         self.layout.addStretch()
 
     def update_page(self):

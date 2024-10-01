@@ -1,7 +1,7 @@
 from PySide6 import QtWidgets, QtCore
-
 from all_headers import short_term_facilities_header
 from blank_page import BlankPage
+from settings import *
 
 
 def get_header():
@@ -20,10 +20,12 @@ class ShortTermFacilitiesPage(BlankPage):
         container1 = QtWidgets.QGroupBox()
         container1_layout = QtWidgets.QVBoxLayout()
         container1.setLayout(container1_layout)
+        container1.setFixedWidth(fixed_width)
 
         container2 = QtWidgets.QGroupBox()
         container2_layout = QtWidgets.QVBoxLayout()
         container2.setLayout(container2_layout)
+        container2.setFixedWidth(fixed_width)
 
         name_label = QtWidgets.QLabel("Namn")
         name = QtWidgets.QLineEdit()
@@ -60,10 +62,10 @@ class ShortTermFacilitiesPage(BlankPage):
         for widget in widgets2:
             container2_layout.addWidget(widget)
 
-        self.layout.addWidget(QtWidgets.QLabel("Lägg till korttidsboende"))
-        self.layout.addWidget(container1)
-        self.layout.addWidget(QtWidgets.QLabel("Radera korttidsboende"))
-        self.layout.addWidget(container2)
+        self.layout.addWidget(QtWidgets.QLabel("Lägg till korttidsboende"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container1, alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(QtWidgets.QLabel("Radera korttidsboende"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container2, alignment=QtCore.Qt.AlignCenter)
 
         self.layout.addStretch()
 

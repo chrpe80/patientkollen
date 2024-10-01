@@ -1,8 +1,7 @@
 from PySide6 import QtWidgets, QtCore
-
 from all_headers import staff_header
 from blank_page import BlankPage
-import csv
+from settings import *
 
 
 def get_header():
@@ -19,10 +18,12 @@ class StaffPage(BlankPage):
         container1 = QtWidgets.QGroupBox()
         container1_layout = QtWidgets.QVBoxLayout()
         container1.setLayout(container1_layout)
+        container1.setFixedWidth(fixed_width)
 
         container2 = QtWidgets.QGroupBox()
         container2_layout = QtWidgets.QVBoxLayout()
         container2.setLayout(container2_layout)
+        container2.setFixedWidth(fixed_width)
 
         fname_label = QtWidgets.QLabel("Förnamn")
         fname = QtWidgets.QLineEdit()
@@ -71,10 +72,10 @@ class StaffPage(BlankPage):
         for widget in widgets2:
             container2_layout.addWidget(widget)
 
-        self.layout.addWidget(QtWidgets.QLabel("Lägg till personal"))
-        self.layout.addWidget(container1)
-        self.layout.addWidget(QtWidgets.QLabel("Radera personal"))
-        self.layout.addWidget(container2)
+        self.layout.addWidget(QtWidgets.QLabel("Lägg till personal"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container1, alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(QtWidgets.QLabel("Radera personal"), alignment=QtCore.Qt.AlignCenter)
+        self.layout.addWidget(container2, alignment=QtCore.Qt.AlignCenter)
 
         self.layout.addStretch()
 
